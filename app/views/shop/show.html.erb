@@ -1,0 +1,8 @@
+<div id="items">
+  <% @items.each do |item| %>
+    <%= render item %>
+    <p>
+      <%= link_to "buy this item", "/main/buy/#{item.id}" %>
+    </p>
+  <% end %>
+</div>
