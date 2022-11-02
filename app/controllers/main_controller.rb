@@ -17,11 +17,37 @@ class MainController < ApplicationController
 		end
 	end
 
+	def relay2
+		@item = Item.find(params[:id].to_i)
+		respond_to do |format|
+	      if @item.update(item_params)
+	        format.html { redirect_to '/main/user_item', notice: "Item was successfully updated." }
+	        format.json { render :show, status: :ok, location: @item }
+	      else
+	        format.html { render :edit, status: :unprocessable_entity }
+	        format.json { render json: @item.errors, status: :unprocessable_entity }
+	      end
+	    end
+	end
+
+	def edit_item
+		if(!session[:authen])
+			redirect_to :controller=>'main',:action=>'login'
+		end
+		@item = Item.find(params[:id])
+	end
+
 	def user_item
+		if(!session[:authen])
+			redirect_to :controller=>'main',:action=>'login'
+		end
 		@items = Item.where(user_id: session[:userid].to_i)
 	end
 
 	def inventories
+		if(!session[:authen])
+			redirect_to :controller=>'main',:action=>'login'
+		end
 		@inventories = Inventory.where(user_id: session[:userid].to_i)
 	end
 
@@ -32,13 +58,17 @@ class MainController < ApplicationController
 		inven.user_id = user_id
 		inven.item_id = item_id
 		inven.price = Item.find(item_id).price
+		inven.timestamp = DateTime.now
 		inven.save
-
 		item = Item.find(item_id)
 		item.stock = item.stock-1
 		item.save
 
-		#redirect_to :controller=>'main',:action=>'inventories'
+		redirect_to :controller=>'main',:action=>'inventories'
 	end
+
+	def item_params
+      params.require(:item).permit(:user_id, :name, :price, :stock)
+    end
 
 end
