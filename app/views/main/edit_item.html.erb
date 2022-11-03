@@ -32,9 +32,9 @@
     <%= form.file_field :"item[picture]",value: @item.picture%>
   </div>
 
-  
-  <%= image_tag @item.picture.variant(:thumb) %>
-
+  <%if item.picture.attached?%>
+    <%= image_tag @item.picture.variant(:thumb) %>
+  <% end %>
 
   <div>
     <%= form.submit %>
