@@ -6,6 +6,7 @@
   <table class="table table-dark">
     <thead class="thead-dark">
       <tr class="row">
+        <th class="col">Item_Picture</th>
         <th class="col">Item_Name</th>
         <th class="col">Item_Price</th>
         <th class="col">Item_Stock</th>
@@ -16,6 +17,14 @@
   <% @items.each do |item| %>
     <%if item.stock > 0%>
       <tr class="row">
+
+        <th class="col">
+          <%if item.picture.attached?%>
+            <%= image_tag item.picture.variant(:thumb) %>
+          <% end %>
+
+        </th>
+
         <th class="col"><%= "#{item.name}" %></th>
         <th class="col"><%= "#{item.price}" %></th>
         <th class="col"><%= "#{item.stock}" %></th>

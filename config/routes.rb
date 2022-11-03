@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get '/main/edit_item/:id' => 'main#edit_item'
   post '/main/relay'
   post '/main/relay2/:id' => 'main#relay2'
+  post '/main/relay3'
+  get '/main/add_item' => 'main#add_item'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

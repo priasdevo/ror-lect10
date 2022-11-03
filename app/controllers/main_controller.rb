@@ -21,10 +21,26 @@ class MainController < ApplicationController
 		@item = Item.find(params[:id].to_i)
 		respond_to do |format|
 	      if @item.update(item_params)
+	      	if(item_params[:picture]!=nil)
+	      		@item.picture.attach(item_params[:picture])
+	      	end
 	        format.html { redirect_to '/main/user_item', notice: "Item was successfully updated." }
 	        format.json { render :show, status: :ok, location: @item }
 	      else
 	        format.html { render :edit, status: :unprocessable_entity }
+	        format.json { render json: @item.errors, status: :unprocessable_entity }
+	      end
+	    end
+	end
+
+	def relay3
+		@item = Item.new(item_params)
+	    respond_to do |format|
+	      if @item.save
+	        format.html { redirect_to '/main/user_item', notice: "Item was successfully created." }
+	        format.json { render :show, status: :created, location: @item }
+	      else
+	        format.html { render :new, status: :unprocessable_entity }
 	        format.json { render json: @item.errors, status: :unprocessable_entity }
 	      end
 	    end
@@ -35,6 +51,13 @@ class MainController < ApplicationController
 			redirect_to :controller=>'main',:action=>'login'
 		end
 		@item = Item.find(params[:id])
+	end
+
+	def add_item
+		if(!session[:authen])
+			redirect_to :controller=>'main',:action=>'login'
+		end
+		@item = Item.new
 	end
 
 	def user_item
@@ -68,7 +91,7 @@ class MainController < ApplicationController
 	end
 
 	def item_params
-      params.require(:item).permit(:user_id, :name, :price, :stock)
+      params.require(:item).permit(:user_id, :name, :price, :stock, :picture)
     end
 
 end
